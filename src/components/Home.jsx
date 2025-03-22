@@ -42,8 +42,8 @@ const Home = () => {
         <Header />
 
         {/* Title Animation */}
-        <div className="mt-30 text-center text-white">
-          <h2 className="text-3xl md:text-5xl font-bold drop-shadow-md">
+        <div className="mt-30 text-center text-gray-900">
+          <h2 className="text-3xl md:text-5xl font-bold drop-shadow-md text-white">
             <TypeAnimation
               sequence={[
                 "AI Voice Services", 2000,
@@ -56,7 +56,7 @@ const Home = () => {
             />
           </h2>
 
-          <p className="text-teal-200 max-w-2xl mx-auto mt-4 text-lg">
+          <p className="text-gray-700 max-w-2xl mx-auto mt-4 text-lg">
             Choose an AI-powered voice service and elevate your digital experience.
           </p>
         </div>
@@ -84,7 +84,7 @@ const Home = () => {
 
         {/* Call to Action */}
         <div className="mt-16 text-center">
-          <p className="text-teal-200 max-w-2xl mx-auto mt-4 text-lg">
+          <p className="text-gray-700 max-w-2xl mx-auto mt-4 text-lg">
             Ready to build the future of voice technology?
           </p>
         </div>
