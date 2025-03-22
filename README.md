@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Emotivox2.0
 
 🎙️ AI Voice Cloning Model 🚀
