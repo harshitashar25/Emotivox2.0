@@ -64,7 +64,7 @@ def receive_data():
         engine.setProperty('rate', 140)
     elif dominant_emotion['label'] == 'fear':
         engine.setProperty('rate', 110)
-    elif dominant_emotion['label'] == 'surprise':
+    elif dominant_emotion['label'] == 'surprised':
         engine.setProperty('rate', 135)
     else:  # Neutral or other emotions
         engine.setProperty('rate', 120)
