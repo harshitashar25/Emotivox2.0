@@ -42,7 +42,7 @@ const Home = () => {
         <Header />
 
         {/* Title Animation */}
-        <div className="mt-10 text-center text-white">
+        <div className="mt-30 text-center text-white">
           <h2 className="text-3xl md:text-5xl font-bold drop-shadow-md">
             <TypeAnimation
               sequence={[
