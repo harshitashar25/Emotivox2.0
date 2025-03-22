@@ -1,19 +1,60 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const TextToSpeech = () => {
   const [text, setText] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [speechSynthesisInstance, setSpeechSynthesisInstance] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null); // Store the generated audio URL
+  const mediaRecorderRef = useRef(null);
 
-  const handleGenerateSpeech = () => {
-    if (!text.trim()) return;
+  const handleGenerateSpeech = async () => {
+    if (!text.trim()) {
+      alert("Please enter some text.");
+      return;
+    }
 
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.onend = () => setIsSpeaking(false);
-    speech.onerror = () => setIsSpeaking(false);
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const destination = audioContext.createMediaStreamDestination();
 
-    window.speechSynthesis.speak(speech);
-    setSpeechSynthesisInstance(speech);
+    // Create a MediaRecorder to record the stream
+    const mediaRecorder = new MediaRecorder(destination.stream);
+    mediaRecorderRef.current = mediaRecorder;
+
+    const audioChunks = [];
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        audioChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setAudioUrl(audioUrl);
+    };
+
+    // Start recording
+    mediaRecorder.start();
+
+    // Connect speech synthesis to the destination
+    const utterance = new SpeechSynthesisUtterance(text);
+    const synth = window.speechSynthesis;
+
+    // Use Web Audio API to route speech synthesis output to MediaStreamDestination
+    const oscillator = audioContext.createOscillator(); // Silent oscillator
+    oscillator.frequency.setValueAtTime(0, audioContext.currentTime); // Set frequency to 0 for silence
+    const gainNode = audioContext.createGain();
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime); // Set gain to 0 for silence
+
+    oscillator.connect(gainNode).connect(destination); // Connect silent source to destination
+    oscillator.start();
+
+    utterance.onend = () => {
+      mediaRecorder.stop(); // Stop recording when speech ends
+      oscillator.stop(); // Stop silent oscillator
+      setIsSpeaking(false);
+    };
+
+    synth.speak(utterance);
     setIsSpeaking(true);
   };
 
@@ -28,14 +69,16 @@ const TextToSpeech = () => {
   };
 
   const handleDownloadSpeech = () => {
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "speech.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    if (audioUrl) {
+      const a = document.createElement("a");
+      a.href = audioUrl;
+      a.download = "speech.wav";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      alert("No audio available. Please generate speech first.");
+    }
   };
 
   return (
@@ -84,7 +127,7 @@ const TextToSpeech = () => {
 
         <div className="mt-4 text-center text-gray-600 dark:text-gray-400">
           <p>
-            This tool converts your text into speech. You can pause, resume, or download the text as needed.
+            This tool converts your text into speech. You can pause, resume, or download the generated speech as needed.
           </p>
         </div>
       </div>

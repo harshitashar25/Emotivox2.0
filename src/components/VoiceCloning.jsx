@@ -5,7 +5,6 @@ const VoiceCloning = () => {
   const [text, setText] = useState("");
   const [audioFile, setAudioFile] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [speechSynthesisInstance, setSpeechSynthesisInstance] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -26,24 +25,19 @@ const VoiceCloning = () => {
       return;
     }
 
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.onend = () => setIsSpeaking(false);
-    speech.onerror = () => setIsSpeaking(false);
-
-    window.speechSynthesis.speak(speech);
-    setSpeechSynthesisInstance(speech);
+    alert(`Voice cloning initiated with reference audio: ${audioFile.name}`);
     setIsSpeaking(true);
-    alert(`Voice cloning in progress with reference audio: ${audioFile.name}`);
+    // Here you will integrate with your Gradio backend to process the audio file and text
   };
 
   const handlePauseSpeech = () => {
-    window.speechSynthesis.pause();
     setIsSpeaking(false);
+    alert("Paused speech.");
   };
 
   const handleResumeSpeech = () => {
-    window.speechSynthesis.resume();
     setIsSpeaking(true);
+    alert("Resumed speech.");
   };
 
   const handleDownloadSpeech = () => {
