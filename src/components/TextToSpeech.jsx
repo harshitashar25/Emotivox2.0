@@ -15,7 +15,6 @@ const TextToSpeech = () => {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const destination = audioContext.createMediaStreamDestination();
 
-    // Create a MediaRecorder to record the stream
     const mediaRecorder = new MediaRecorder(destination.stream);
     mediaRecorderRef.current = mediaRecorder;
 
@@ -32,25 +31,22 @@ const TextToSpeech = () => {
       setAudioUrl(audioUrl);
     };
 
-    // Start recording
     mediaRecorder.start();
 
-    // Connect speech synthesis to the destination
     const utterance = new SpeechSynthesisUtterance(text);
     const synth = window.speechSynthesis;
 
-    // Use Web Audio API to route speech synthesis output to MediaStreamDestination
-    const oscillator = audioContext.createOscillator(); // Silent oscillator
-    oscillator.frequency.setValueAtTime(0, audioContext.currentTime); // Set frequency to 0 for silence
+    const oscillator = audioContext.createOscillator();
+    oscillator.frequency.setValueAtTime(0, audioContext.currentTime);
     const gainNode = audioContext.createGain();
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime); // Set gain to 0 for silence
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
 
-    oscillator.connect(gainNode).connect(destination); // Connect silent source to destination
+    oscillator.connect(gainNode).connect(destination);
     oscillator.start();
 
     utterance.onend = () => {
-      mediaRecorder.stop(); // Stop recording when speech ends
-      oscillator.stop(); // Stop silent oscillator
+      mediaRecorder.stop();
+      oscillator.stop();
       setIsSpeaking(false);
     };
 
@@ -125,10 +121,14 @@ const TextToSpeech = () => {
           </button>
         </div>
 
+        {audioUrl && (
+          <div className="mt-6 text-center">
+            <audio controls src={audioUrl} className="w-full mt-4" />
+          </div>
+        )}
+
         <div className="mt-4 text-center text-gray-600 dark:text-gray-400">
-          <p>
-            This tool converts your text into speech. You can pause, resume, or download the generated speech as needed.
-          </p>
+          <p>This tool converts your text into speech. You can pause, resume, or download the generated speech as needed.</p>
         </div>
       </div>
     </div>

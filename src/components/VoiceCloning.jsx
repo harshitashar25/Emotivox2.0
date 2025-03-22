@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaUpload, FaMicrophone, FaPause, FaPlay, FaDownload } from "react-icons/fa";
+import Header from "./Header"; // Import the Header component
 
 const VoiceCloning = () => {
   const [text, setText] = useState("");
@@ -52,7 +53,8 @@ const VoiceCloning = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
+      <Header /> {/* Added Header Component */}
       <div className="w-full max-w-xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
         <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-6">
           Voice Cloning
@@ -72,7 +74,9 @@ const VoiceCloning = () => {
 
         {/* File Upload */}
         <div className="mt-4">
-          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">Upload Reference Audio (WAV only)</label>
+          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Upload Reference Audio (WAV only)
+          </label>
           <div className="flex items-center space-x-3">
             <label className="cursor-pointer bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-purple-700 transition-transform transform hover:scale-105">
               <FaUpload />
@@ -100,7 +104,7 @@ const VoiceCloning = () => {
           {isSpeaking ? (
             <button
               onClick={handlePauseSpeech}
-              className="px-6 py-3 bg-red-500 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
+              className="px-6 py-3 bg-gradient-to-r from-red-400 to-red-600 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
             >
               <FaPause />
               <span>Pause</span>
@@ -108,7 +112,7 @@ const VoiceCloning = () => {
           ) : (
             <button
               onClick={handleResumeSpeech}
-              className="px-6 py-3 bg-yellow-500 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
+              className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
             >
               <FaPlay />
               <span>Resume</span>
@@ -116,7 +120,7 @@ const VoiceCloning = () => {
           )}
           <button
             onClick={handleDownloadSpeech}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
+            className="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
           >
             <FaDownload />
             <span>Download</span>
