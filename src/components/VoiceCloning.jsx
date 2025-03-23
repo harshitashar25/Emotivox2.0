@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaUpload, FaMicrophone, FaPause, FaPlay, FaDownload } from "react-icons/fa";
-import Header from "./Header"; // Import the Header component
+import Header from "./Header";
 
 const VoiceCloning = () => {
   const [text, setText] = useState("");
+  const [audioFiles, setAudioFiles] = useState([]);
   const [audioFile, setAudioFile] = useState(null);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [audioUrl, setAudioUrl] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -16,7 +17,7 @@ const VoiceCloning = () => {
     }
   };
 
-  const handleGenerateSpeech = () => {
+  const handleGenerateSpeech = async () => {
     if (!text.trim()) {
       alert("Please enter text for voice cloning.");
       return;
@@ -26,110 +27,70 @@ const VoiceCloning = () => {
       return;
     }
 
-    alert(`Voice cloning initiated with reference audio: ${audioFile.name}`);
-    setIsSpeaking(true);
-    // Here you will integrate with your Gradio backend to process the audio file and text
+    const formData = new FormData();
+    formData.append("text", text);
+    formData.append("voiceFiles", audioFile);
+
+    const response = await fetch("http://127.0.0.1:5000/clone", {
+      method: "POST",
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const url = data.download_url;
+      setAudioUrl(url);
+      loadAudioList();
+    } else {
+      alert("Something went wrong!");
+    }
   };
 
-  const handlePauseSpeech = () => {
-    setIsSpeaking(false);
-    alert("Paused speech.");
+  const loadAudioList = async () => {
+    const response = await fetch("http://127.0.0.1:5000/list-outputs");
+    if (response.ok) {
+      const files = await response.json();
+      setAudioFiles(files);
+    } else {
+      alert("Failed to load audio files!");
+    }
   };
 
-  const handleResumeSpeech = () => {
-    setIsSpeaking(true);
-    alert("Resumed speech.");
-  };
-
-  const handleDownloadSpeech = () => {
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "cloned_speech.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
+  useEffect(() => {
+    loadAudioList();
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
-      <Header /> {/* Added Header Component */}
-      <div className="w-full max-w-xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-        <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-6">
-          Voice Cloning
-        </h2>
-
-        <p className="text-center text-gray-600 dark:text-gray-400 mb-4">
-          Upload a reference audio file and enter text to synthesize speech.
-        </p>
-
-        {/* Text Input */}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-700 p-6">
+      <Header />
+      <div className="w-full max-w-xl bg-gray-800 p-6 rounded-2xl shadow-xl">
+        <h2 className="text-4xl font-bold text-center text-white mb-6">Voice Cloning</h2>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Enter text here..."
-          className="w-full h-32 p-4 text-lg text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none"
+          className="w-full h-32 p-4 text-lg text-white bg-gray-700 border border-gray-600 rounded-lg focus:outline-none mb-4"
         />
-
-        {/* File Upload */}
-        <div className="mt-4">
-          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Upload Reference Audio (WAV only)
+        <div className="flex items-center gap-4 mb-4">
+          <input type="file" accept=".wav" onChange={handleFileUpload} className="hidden" id="file-upload" />
+          <label htmlFor="file-upload" className="px-4 py-2 bg-purple-600 text-white rounded-full cursor-pointer hover:bg-purple-700">
+            <FaUpload className="inline mr-2" />Upload WAV File
           </label>
-          <div className="flex items-center space-x-3">
-            <label className="cursor-pointer bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-purple-700 transition-transform transform hover:scale-105">
-              <FaUpload />
-              <span>Upload</span>
-              <input
-                type="file"
-                accept=".wav"
-                className="hidden"
-                onChange={handleFileUpload}
-              />
-            </label>
-            {audioFile && <span className="text-gray-600 dark:text-gray-400">{audioFile.name}</span>}
-          </div>
-        </div>
-
-        {/* Controls */}
-        <div className="mt-6 flex justify-center space-x-4">
           <button
             onClick={handleGenerateSpeech}
-            className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
+            className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
           >
-            <FaMicrophone />
-            <span>Clone Voice</span>
-          </button>
-          {isSpeaking ? (
-            <button
-              onClick={handlePauseSpeech}
-              className="px-6 py-3 bg-gradient-to-r from-red-400 to-red-600 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
-            >
-              <FaPause />
-              <span>Pause</span>
-            </button>
-          ) : (
-            <button
-              onClick={handleResumeSpeech}
-              className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
-            >
-              <FaPlay />
-              <span>Resume</span>
-            </button>
-          )}
-          <button
-            onClick={handleDownloadSpeech}
-            className="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-lg transition-transform transform hover:scale-105 flex items-center space-x-2"
-          >
-            <FaDownload />
-            <span>Download</span>
+            Clone Voice
           </button>
         </div>
 
-        <div className="mt-4 text-center text-gray-600 dark:text-gray-400">
-          <p>Upload a WAV file and input text to create synthesized speech.</p>
-        </div>
+        {audioUrl && (
+          <div className="mt-4">
+            <audio controls src={audioUrl} className="w-full"></audio>
+          </div>
+        )}
+
+  
       </div>
     </div>
   );
