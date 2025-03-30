@@ -1,42 +1,54 @@
+🎙️EMOTIVOX2.0 - VOICE Cloning Web Application
 
-# Emotivox2.0
+This project is a web-based Voice Cloning App that allows users to upload their voice samples and generate cloned speech from text input. The app uses “YourTTS” under the hood and offers an easy-to-use interface via a modern frontend framework powered by “Vite”.
 
-🎙️ AI Voice Cloning Model 🚀
+✅Convert Text to Voice
+✅ Generate Cloned Voice from Text (using uploaded samples)
+✅ Perform Voice to Text Transcription(supports both English and Hindi)
 
-This project focuses on building a high-quality Text-to-Speech (TTS) and Voice Cloning system. Our implementation allows users to generate speech using a generic voice as well as clone their own voice for a personalized text-to-speech experience.
 
-🔥 Features
+🔄 Workflow
 
-✅ Generic Text-to-Speech (TTS): Converts any text into speech using a high-quality, natural-sounding voice.
-✅ Personalized Voice Cloning: Allows users to train the model on their voice and generate speech in their own tone.
-✅ Interactive Interface: Users can input text, play, pause, and save audio.
-✅ Realistic Speech Output: Ensures clarity and natural intonation.
+1.  Frontend
+- Users upload voice samples and input text/audio.
+- Buttons trigger backend APIs.
+- Audio results are played , can be paused and downloadable.
 
-🛠️ Tech Stack
+2. Backend (Flask)
+- Handles:
+ - Voice cloning (Text → Cloned Voice)
+ - Basic TTS (Text → Voice)
+ - ASR (Voice → Text in Hindi/English)
+- Outputs audio/text via Flask routes.
 
-Generic TTS: Implemented using pyttsx3, a text-to-speech conversion library that works offline and supports multiple voices.
-Voice Cloning: Powered by Coqui TTS, an open-source deep-learning framework for cloning voices and generating realistic speech.
 
-📌 How It Works
 
-1️⃣ Generic Text-to-Speech
-Uses pyttsx3 to generate speech from text.
+🛠️ Setup Instructions
 
-2️⃣ Personalized Voice Cloning
-Users can upload a short voice sample.
-The model learns the voice characteristics and generates speech using Coqui TTS.
-Users can enter text and listen to their cloned voice read it out.
-=======
-# React + Vite
+✅ Prerequisites
+- Python 3.8+
+- Node.js 14+
+- pip / npm / yarn
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
->>>>>>> e7ab6c1 (Initial commit for Emotivox2.0)
+🔧 Backend Setup
+
+cd frontend/Backend/TTS
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Run Flask backend
+python app.py
+
+ It will Run on http://127.0.0.1:5000
+
+💻 Frontend Setup
+
+cd frontend
+npm init -y
+npm install
+npm run dev
