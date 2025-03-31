@@ -35,11 +35,19 @@ This project is a web-based Voice Cloning App that allows users to upload their 
 
 
 🔧 Backend Setup
-
+```bash
 cd frontend/Backend/TTS
+```
+```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+```bash
+source venv/bin/activate
+# On Windows: venv\Scripts\activate
+```
+```bash
 pip install -r requirements.txt
+```
 
 # Run Flask backend
 python app.py
