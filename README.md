@@ -48,7 +48,15 @@ python app.py
 
 💻 Frontend Setup
 
+## Frontend Setup
+
+```bash
 cd frontend
 npm init -y
+```
+```bash
 npm install
+```
+```bash
 npm run dev
+```
