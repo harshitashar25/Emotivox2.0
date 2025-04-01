@@ -25,3 +25,4 @@ dist-ssr
 Backend/venv/
 Backend/venv/Lib/site-packages/**/*.dll
 Backend/venv/Lib/site-packages/**/*.db
+node_modules
