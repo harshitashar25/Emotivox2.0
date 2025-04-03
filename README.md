@@ -58,13 +58,6 @@ EMOTIVOX2.0/
 cd frontend/Backend/TTS
 ```
 ```bash
-python -m venv venv
-```
-```bash
-source venv/bin/activate
-# On Windows: venv\Scripts\activate
-```
-```bash
 pip install -r requirements.txt
 ```
 
